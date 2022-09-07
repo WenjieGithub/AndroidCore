@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF">
+
+    <TextView
+        android:id="@+id/kit_title"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="#FFFF8800"
+        android:gravity="center"
+        android:paddingTop="35dp"
+        android:text="@string/lib_floating_kit_util_log"
+        android:textColor="#FFFFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/kit_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="35dp"
+        android:contentDescription="@string/lib_floating_kit_title_text"
+        android:padding="5dp"
+        android:src="@drawable/lib_floating_kit_vector_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="PrivateResource" />
+
+    <ImageView
+        android:id="@+id/kit_search"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="35dp"
+        android:contentDescription="@string/lib_floating_kit_title_text"
+        android:padding="5dp"
+        android:src="@drawable/lib_floating_kit_search_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="PrivateResource" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/kit_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/kit_title"
+        app:tabGravity="center"
+        app:tabIndicatorColor="#FFFF8800"
+        app:tabMode="auto"
+        app:tabSelectedTextColor="#FFFF8800"
+        app:tabTextColor="#FF000000" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/kit_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kit_tab" />
+</androidx.constraintlayout.widget.ConstraintLayout>

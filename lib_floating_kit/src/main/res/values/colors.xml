@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lib_floating_kit_white">#FFFFFF</color>
+    <color name="lib_floating_kit_log_msg">#8BC34A</color>
+    <color name="lib_floating_kit_log_warn">#FFC107</color>
+    <color name="lib_floating_kit_log_error">#F44336</color>
+    <color name="lib_floating_kit_log_debug">#3F51B5</color>
+    <color name="lib_floating_kit_log_net">#009688</color>
+    <color name="lib_floating_kit_log_component">#FF5722</color>
+    <color name="lib_floating_kit_log_other">#717171</color>
+</resources>

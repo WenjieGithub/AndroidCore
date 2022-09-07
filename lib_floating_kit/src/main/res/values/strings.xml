@@ -1,0 +1,31 @@
+<resources>
+    <string name="lib_floating_kit_title_text">Kit</string>
+    <string name="lib_floating_kit_common_use">常用工具</string>
+    <string name="lib_floating_kit_util_env">环境切换</string>
+    <string name="lib_floating_kit_util_cache">缓存清理</string>
+    <string name="lib_floating_kit_util_log">日志查看</string>
+    <string name="lib_floating_kit_util_dev">开发者选项</string>
+    <string name="lib_floating_kit_util_app">APP 信息</string>
+    <string name="lib_floating_kit_util_extend">扩展</string>
+
+    <string name="lib_floating_kit_determine">确定</string>
+
+    <string name="lib_floating_kit_search_hint">输入要搜索的内容, 最多 50 个字符</string>
+
+    <string name="lib_floating_kit_app_package">应用包名:</string>
+    <string name="lib_floating_kit_app_version">应用版本:</string>
+    <string name="lib_floating_kit_app_min_version">最低SDK版本:</string>
+    <string name="lib_floating_kit_app_target_version">目标SDK版本:</string>
+
+    <string name="lib_floating_kit_app_phone_model">手机型号:</string>
+    <string name="lib_floating_kit_app_system_version">系统版本:</string>
+    <string name="lib_floating_kit_app_resolution">分辨率:</string>
+    <string name="lib_floating_kit_app_screen_size">屏幕尺寸:</string>
+    <string name="lib_floating_kit_app_density">屏幕密度:</string>
+    <string name="lib_floating_kit_app_root">Root:</string>
+
+    <string name="lib_floating_kit_app_ip">IP:</string>
+    <string name="lib_floating_kit_app_sign_md5">Sign MD5:</string>
+    <string name="lib_floating_kit_app_sign_sha1">Sign SHA1:</string>
+    <string name="lib_floating_kit_app_sign_sha256">Sign SHA256:</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="love.nuoyan.android.lib_qr">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <!-- 许可调用相机硬件 -->
+    <uses-feature android:name="android.hardware.camera" />
+    <!-- 许可调用相机自动对焦 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
+    <application>
+        <activity
+            android:name=".decode.ScanCodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+    </application>
+</manifest>

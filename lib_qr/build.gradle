@@ -1,0 +1,15 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../core_module.gradle'
+
+dependencies {
+    api 'androidx.appcompat:appcompat:1.5.0'
+    api ('com.google.zxing:core:3.4.1')
+    api ("androidx.camera:camera-camera2:1.2.0-beta01")
+    api ("androidx.camera:camera-lifecycle:1.2.0-beta01")
+    api ("androidx.camera:camera-extensions:1.2.0-beta01")
+    api ("androidx.camera:camera-view:1.2.0-beta01")
+}
