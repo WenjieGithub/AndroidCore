@@ -8,6 +8,9 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://www.jitpack.io' }                              // JitPack 仓库
         google()
         mavenCentral()
     }
@@ -18,3 +21,4 @@ include ':lib_floating_kit'
 include ':lib_net'
 include ':lib_permission'
 include ':lib_qr'
+include ':lib_utils'

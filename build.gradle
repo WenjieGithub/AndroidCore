@@ -22,6 +22,7 @@ ext {
     netV = "0.0.1"
     perV = "0.0.1"
     qrV = "0.0.1"
+    utilsV = "0.0.1"
 }
 task clean(type: Delete) {
     delete rootProject.buildDir

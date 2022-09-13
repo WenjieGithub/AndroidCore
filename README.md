@@ -5,7 +5,7 @@
 ``` gradle
     appTestImplementation 'love.nuoyan.android:floating_kit:0.0.1'
     
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation "com.google.android.material:material:1.6.1"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -166,3 +166,26 @@ interface EnvironmentCallback {
 ``` groovy
     implementation 'love.nuoyan.android:qr:0.0.1'
 ```
+
+
+# Utils
+
+## 引入
+``` groovy
+    implementation 'com.caixin.android:utils:0.0.1'
+```
+
+## 初始化
+```
+    Utils.init(app: Application, debug: Boolean, key: String, defaultChannel: String, lifecycleCallback: LifecycleCallback?)
+```
+
+## 存储库
+UtilsData : 安全存储(DataStore实现)，避免某些机型 MMKV 丢失数据问题
+UtilsKV : 存储 Key-Value 工具类
+UtilsCache : 用于存储缓存的 KV，可以随时清除
+
+## 库单独添的加依赖
+1. 引入了依赖：[MMKV 1.2.14](https://github.com/Tencent/MMKV)
+2. 引入了依赖：[Walle 1.1.7](https://github.com/Meituan-Dianping/walle)
+
