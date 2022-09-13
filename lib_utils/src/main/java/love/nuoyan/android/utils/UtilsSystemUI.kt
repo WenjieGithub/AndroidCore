@@ -53,7 +53,7 @@ object UtilsSystemUI {
      */
     fun hideSystemUI(activity: Activity) {
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
-        val controller = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        val controller = WindowCompat.getInsetsController(activity.window, activity.findViewById(android.R.id.content))
         controller.hide(WindowInsetsCompat.Type.systemBars())
         controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     }
