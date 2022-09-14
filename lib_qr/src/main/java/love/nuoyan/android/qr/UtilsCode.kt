@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr
+package love.nuoyan.android.qr
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import love.nuoyan.android.lib_qr.decode.ScanCodeActivity
+import love.nuoyan.android.qr.decode.ScanCodeActivity
 import com.google.zxing.*
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.common.HybridBinarizer
@@ -331,7 +331,7 @@ object UtilsCode {
                 scanBitmap = qrBitmap.copy(Bitmap.Config.RGBA_F16, true)
             }
 
-            val source = love.nuoyan.android.lib_qr.decode.RGBLuminanceSource(scanBitmap)
+            val source = love.nuoyan.android.qr.decode.RGBLuminanceSource(scanBitmap)
             val bitmap = BinaryBitmap(HybridBinarizer(source))
             val reader = QRCodeReader()
             reader.decode(bitmap, hints).text

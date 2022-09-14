@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.decode
+package love.nuoyan.android.qr.decode
 
 import com.google.zxing.BarcodeFormat
 import java.util.*

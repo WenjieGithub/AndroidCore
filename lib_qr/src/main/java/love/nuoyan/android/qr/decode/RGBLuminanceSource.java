@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.decode;
+package love.nuoyan.android.qr.decode;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -5,6 +5,7 @@ android {
         minSdk rootProject.minSdkV
         targetSdk rootProject.targetSdkV
 
+        resourcePrefix project.getName()
         consumerProguardFiles "consumer-rules.pro"
     }
 

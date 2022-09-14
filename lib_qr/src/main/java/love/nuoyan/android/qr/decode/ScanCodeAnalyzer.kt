@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.decode
+package love.nuoyan.android.qr.decode
 
 import android.app.Activity
 import android.graphics.ImageFormat

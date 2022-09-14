@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import love.nuoyan.android.core.example.R
 import love.nuoyan.android.core.example.databinding.LibQrLayoutBinding
 import love.nuoyan.android.core.example.dp2px
-import love.nuoyan.android.lib_qr.UtilsCode
+import love.nuoyan.android.qr.UtilsCode
 import love.nuoyan.android.permission.PermissionRequest
 
 class QrFragment : Fragment() {

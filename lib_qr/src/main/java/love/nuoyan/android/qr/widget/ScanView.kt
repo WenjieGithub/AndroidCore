@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.widget
+package love.nuoyan.android.qr.widget
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -8,7 +8,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
-import love.nuoyan.android.lib_qr.decode.dp2px
+import love.nuoyan.android.qr.decode.dp2px
 
 class ScanView : View {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)

@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.decode
+package love.nuoyan.android.qr.decode
 
 import android.app.Activity
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.res.AssetFileDescriptor
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
-import love.nuoyan.android.lib_qr.R
+import love.nuoyan.android.qr.R
 import java.io.Closeable
 import java.io.IOException
 

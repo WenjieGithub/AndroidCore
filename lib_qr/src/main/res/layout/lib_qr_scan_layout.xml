@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <love.nuoyan.android.lib_qr.widget.ScanView
+    <love.nuoyan.android.qr.widget.ScanView
         android:id="@+id/scan"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -1,4 +1,4 @@
-package love.nuoyan.android.lib_qr.decode
+package love.nuoyan.android.qr.decode
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,9 +12,9 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import love.nuoyan.android.lib_qr.R
-import love.nuoyan.android.lib_qr.UtilsCode
-import love.nuoyan.android.lib_qr.widget.ScanView
+import love.nuoyan.android.qr.R
+import love.nuoyan.android.qr.UtilsCode
+import love.nuoyan.android.qr.widget.ScanView
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
