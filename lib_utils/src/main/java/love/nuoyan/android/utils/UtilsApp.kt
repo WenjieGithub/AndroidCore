@@ -26,7 +26,12 @@ import kotlin.math.sqrt
 object UtilsApp {
     /** 获取进程名称 */
     fun getProcessName(): String? {
-        val am = Utils.appContext.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+        return getProcessName(Utils.appContext)
+    }
+
+    // 获取进程名称
+    fun getProcessName(context: Context): String? {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
         am?.runningAppProcesses?.let { runningApps ->
             for (proInfo in runningApps) {
                 if (proInfo.pid == Process.myPid()) {
