@@ -33,7 +33,6 @@ object UtilsCode {
         context.startActivity(intent)
     }
 
-
     /**
      * 生成二维码, 可添加 logo
      * @param text                  文字
@@ -82,7 +81,6 @@ object UtilsCode {
             null
         }
     }
-
 
     /**
      * 生成二维码

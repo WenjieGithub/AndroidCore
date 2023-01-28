@@ -103,7 +103,6 @@ object UtilsLog {
                     } else {
                         when (tag) {
                             "Warn" -> Log.w("Cx$tag", info.toString())
-                            "Error" -> Log.e("Cx$tag", info.toString())
                             "Debug" -> Log.d("Cx$tag", info.toString())
                             else -> Log.i("Cx$tag", info.toString())
                         }

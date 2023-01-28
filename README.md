@@ -102,10 +102,10 @@ interface EnvironmentCallback {
 ## 需要引入的依赖
 
 ``` gradle
-    implementation "love.nuoyan.android:net:0.0.1"
+    implementation "love.nuoyan.android:net:0.0.2"
 
-//    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.13.0"
-//    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.13.0"
+//    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
+//    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
 ```
 
 ## 初始化
@@ -164,7 +164,7 @@ interface EnvironmentCallback {
 
 ## 引入
 ``` groovy
-    implementation 'love.nuoyan.android:qr:0.0.1'
+    implementation 'love.nuoyan.android:qr:0.0.2'
 ```
 
 
@@ -172,7 +172,8 @@ interface EnvironmentCallback {
 
 ## 引入
 ``` groovy
-    implementation 'com.caixin.android:utils:0.0.1'
+    implementation 'love.nuoyan.android:utils:0.0.2'
+    kapt 'com.github.bumptech.glide:compiler:4.14.2'
 ```
 
 ## 初始化

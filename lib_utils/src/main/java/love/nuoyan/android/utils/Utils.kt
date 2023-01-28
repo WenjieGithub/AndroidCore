@@ -9,11 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 object Utils {
     lateinit var appContext: Context                                        // Application
         private set
-    lateinit var appScope: CoroutineScope                           // 携程空间
+    lateinit var appScope: CoroutineScope                                   // 携程空间
         private set
     var isDebug = false                                                     // 是否 debug 模式
-        private set
-    var isAllPackage = false                                                // 是否全量打包，组件化用
         private set
     val separatorLine = System.getProperty("line.separator") ?: "\n"        // 换行符
 
@@ -26,11 +24,10 @@ object Utils {
      * @param key               日志及kv缓存密钥
      * @param defaultChannel    默认的渠道地址
      */
-    fun init(context: Context, applicationScope: CoroutineScope, debug: Boolean, allPackage: Boolean, key: String, defaultChannel: String) {
+    fun init(context: Context, applicationScope: CoroutineScope, debug: Boolean, key: String, defaultChannel: String) {
         appContext = context.applicationContext
         appScope = applicationScope
         isDebug = debug
-        isAllPackage = allPackage
         // 初始化顺序不能变
         UtilsLog.init(appContext)
         UtilsKV.init(appContext, key)

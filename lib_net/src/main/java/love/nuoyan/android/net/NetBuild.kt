@@ -143,7 +143,6 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
                             val bodyString = buffer.readString(charset ?: StandardCharsets.UTF_8)
                             bodyString
                         }
-
                     }
                 } catch (e: java.lang.Exception) {
                     e.toString()

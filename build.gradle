@@ -10,7 +10,6 @@ ext {
     compileSdkV = 33
     minSdkV = 23
     targetSdkV = 33
-    buildToolsVersion = "30.0.3"
 
     appVersionCode = 1
     appVersionName = "1.0"
@@ -19,10 +18,10 @@ ext {
     // repository
     groupId = 'love.nuoyan.android'
     fkV = "0.0.1"
-    netV = "0.0.1"
+    netV = "0.0.2"
     perV = "0.0.1"
     qrV = "0.0.2"
-    utilsV = "0.0.1"
+    utilsV = "0.0.3"
     widgetsV = "0.0.1"
 }
 task clean(type: Delete) {
