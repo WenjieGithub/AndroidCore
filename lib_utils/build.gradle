@@ -6,7 +6,7 @@ plugins {
 apply from: '../core_module.gradle'
 
 dependencies {
-    api "androidx.appcompat:appcompat:1.5.1"
+    api "androidx.appcompat:appcompat:1.6.0"
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     // UtilsKV MMKV

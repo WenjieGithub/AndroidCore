@@ -15,6 +15,7 @@ import love.nuoyan.android.core.example.R
 import love.nuoyan.android.core.example.databinding.LibNetLayoutBinding
 import love.nuoyan.android.net.NetService
 import love.nuoyan.android.net.NetStatus
+import love.nuoyan.android.net.UtilsJson
 import love.nuoyan.android.net.UtilsNet
 
 class NetFragment : Fragment() {
@@ -41,20 +42,31 @@ class NetFragment : Fragment() {
                     Log.e("NetStatus", NetStatus.Linked.isEffective().toString())
                     Log.e("NetStatus", NetStatus.Linked.getTransport())
                 }
-                NetStatus.Disconnected -> Log.e("Net", NetStatus.Disconnected.name)
-                else -> Log.e("NetStatus", "NetStatus == null")
+                NetStatus.Disconnected -> Log.e("NetStatus", NetStatus.Disconnected.name)
+                else -> Log.e("NetStatus", "NetStatus = null")
             }
         }
     }
 
     fun click() {
         lifecycleScope.launch(Main) {
-            try {
-                val result = NetService.get<String>("https://z1.m1907.cn/?jx=https://www.iqiyi.com/v_10zknhe8mjc.html").build()
-                mBinding.text.text = result
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            val url = "https://gateway.caixin.com/api/app-api/password/update"//点击查看详情次数统计
+            val r = NetService.postJson<String>(url).apply {
+                val map = HashMap<String, Any>()
+                map["id"] = "commandId"
+                map["clickNum"] = 1
+                UtilsJson.toJson(map.toMap())?.let { paramsJson(it) }
+            }.build(onError = {
+                it.toString()
+            })
+
+
+
+//            val result = NetService.get<String>("https://madminv5pre.caixin.com/tmp/channelv5/list_8_20_1.json?")
+//                .call(onError = {
+//                    it.toString()
+//                })
+            mBinding.text.text = r
         }
     }
 }

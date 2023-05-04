@@ -15,7 +15,6 @@ import kotlin.coroutines.resumeWithException
  */
 abstract class NetBuild<T> internal constructor(protected val url: String, protected var tag: String) {
     var type: Type? = null                                              // 泛型类型
-    var call: Call? = null                                              // okHttp Call 可用于取消
     protected var mCacheControl: CacheControl? = null                   // 请求缓存控制
     protected val mRequestBuilder = Request.Builder()                   // 请求构建器
     protected var mCallback: ((call: Call) -> Unit)? = null             // Call 回调
@@ -44,28 +43,34 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
     fun onCall(callback: (call: Call) -> Unit) = apply { mCallback = callback }
 
     open suspend fun build() = withContext(Dispatchers.Default) {
-        if (!UtilsNet.isConnected() && NetService.networkUnavailableForceCache) {   // 网络不可用开启缓存
-            mRequestBuilder.cacheControl(CacheControl.FORCE_CACHE)                  // 设置使用缓存
-        } else {
-            mCacheControl?.let { mRequestBuilder.cacheControl(it) }                 // 使用缓存控制
+        try {
+            if (!UtilsNet.isConnected() && NetService.networkUnavailableForceCache) {   // 网络不可用开启缓存
+                mRequestBuilder.cacheControl(CacheControl.FORCE_CACHE)                  // 设置使用缓存
+            } else {
+                mCacheControl?.let { mRequestBuilder.cacheControl(it) }                 // 使用缓存控制
+            }
+            val call = NetService.okClient.newCall(mRequestBuilder.build())
+            mCallback?.invoke(call)
+            Result.success(call.await())
+        } catch (e: Exception) {
+            NetService.logCallback?.invoke("Net ## CatchingError:$separatorLine${e.stackTraceToString()}")
+            Result.failure(e)
         }
-        call = NetService.okClient.newCall(mRequestBuilder.build())
-        mCallback?.let { it(call!!) }
-        call!!.await()
     }
 
     private suspend fun Call.await() = suspendCancellableCoroutine<T> {
         val start = System.currentTimeMillis()
         enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                NetService.logCallback?.let { log -> log("Net ## $e") }
                 if (it.isCancelled) return
                 it.resumeWithException(e)
             }
             override fun onResponse(call: Call, response: Response) {
                 if (it.isCancelled) return
-                parseResponse(isParseLogRequestBody, isParseLogResponseBody, response, System.currentTimeMillis() - start).let { msg ->
-                    NetService.logCallback?.let { log -> log("Net ## $msg") }
+                try {
+                    parseResponse(isParseLogRequestBody, isParseLogResponseBody, response, System.currentTimeMillis() - start)
+                } catch (e: Exception) {
+                    NetService.logCallback?.invoke("Net ## ParseError:$separatorLine${e.stackTraceToString()}")
                 }
                 it.resumeWith(runCatching {
                     if (response.isSuccessful) {
@@ -90,17 +95,12 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
         private val separatorLine = System.getProperty("line.separator") ?: "\n"
         private fun<D> convert(type: Type?, body: ResponseBody?): D? {
             return if (body != null && type != null) {
-                if (type == object : TypeReference<String>() {}.type) {
-                    body.string() as D
-                } else {
-                    UtilsJson.formJson(type, body.string())
-                }
+                UtilsJson.formJson(type, body.string())
             } else {
                 null
             }
         }
-
-        internal fun parseResponse(isParseRequestBody: Boolean, isParseResponseBody: Boolean, response: Response, duration: Long): String {
+        internal fun parseResponse(isParseRequestBody: Boolean, isParseResponseBody: Boolean, response: Response, duration: Long) {
             val request = response.request
             val requestHeaders = request.headers
             val requestBody = if (isParseRequestBody) request.body else null
@@ -115,55 +115,51 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
             for ((k, v) in responseHeaders) {
                 resHeaders += "$separatorLine   $k : $v "
             }
-            return """$separatorLine
+            NetService.logCallback?.invoke(
+                """
+                |Net ## 
                 |Tag: ${request.tag()} 
                 |Duration: $duration
                 |${response.protocol} ${request.method} ${request.url}
                 |${response.code} ${response.message}
                 |RequestHeaders: $reqHeaders
                 |   Content-Type : ${requestBody?.contentType()}
-                |RequestBody: $separatorLine   ${bodyToString(isParseRequestBody, request)}
                 |ResponseHeaders: $resHeaders
-                |ResponseBody: $separatorLine   ${bodyToString(isParseResponseBody, responseBody)}
+                |RequestBody:
+                |   ${bodyToString(isParseRequestBody, request)}
+                |ResponseBody:
+                |   ${bodyToString(isParseResponseBody, responseBody)}
                 """.trimMargin()
+            )
         }
-
-        private fun bodyToString(isParseRequestBody: Boolean, request: Request): String? {
-            return if (isParseRequestBody) {
-                val buffer = Buffer()
-                try {
-                    val body = request.newBuilder().build().body
-                    body?.let {
-                        if (body.contentLength() > 3000) {
-                            "内容过长 length=${body.contentLength()}"
-                        } else {
-                            val contentType = body.contentType()
-                            val charset = contentType?.charset(StandardCharsets.UTF_8)
-                            it.writeTo(buffer)
-                            val bodyString = buffer.readString(charset ?: StandardCharsets.UTF_8)
-                            bodyString
-                        }
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.toString()
-                } finally {
-                    buffer.close()
+        private fun bodyToString(isParseRequestBody: Boolean, request: Request): String {
+            val buffer = Buffer()
+            return try {
+                if (isParseRequestBody) {
+                    request.newBuilder().build().body?.let {
+                        val contentType = it.contentType()
+                        val charset = contentType?.charset(StandardCharsets.UTF_8)
+                        it.writeTo(buffer)
+                        buffer.readString(charset ?: StandardCharsets.UTF_8)
+                    } ?: ""
+                } else {
+                    "不解析 RequestBody"
                 }
-            } else {
-                "不解析 RequestBody"
+            } catch (e: Exception) {
+                "parse request error: ${e.stackTraceToString()}"
+            } finally {
+                buffer.close()
             }
         }
-        private fun bodyToString(isParseResponseBody: Boolean, responseBody: ResponseBody?): String? {
-            return if (isParseResponseBody) {
-                responseBody?.let {
-                    if (it.contentLength() > 3000) {
-                        "内容过长 length=${it.contentLength()}"
-                    } else {
-                        it.string()
-                    }
+        private fun bodyToString(isParseResponseBody: Boolean, responseBody: ResponseBody?): String {
+            return try {
+                if (isParseResponseBody && responseBody != null) {
+                    responseBody.string()
+                } else {
+                    "不解析 ResponseBody"
                 }
-            } else {
-                "不解析 ResponseBody"
+            } catch (e: Exception) {
+                "parse response error: ${e.stackTraceToString()}"
             }
         }
     }

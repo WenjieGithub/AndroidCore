@@ -1,6 +1,5 @@
 package love.nuoyan.android.net
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.*
 import android.net.wifi.WifiManager
@@ -8,19 +7,16 @@ import android.os.Build
 import androidx.lifecycle.LiveData
 import love.nuoyan.android.net.UtilsNet.transportOther
 
-@SuppressLint("StaticFieldLeak")
 object UtilsNet : LiveData<NetStatus>() {
     const val transportWifi = "Wifi"
     const val transportCellular = "Cellular"
     const val transportOther = "Other"
-    private lateinit var mContext: Context
 
     internal fun initNet(context: Context) {
-        mContext = context.applicationContext
-        val connMgr = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             connMgr?.registerDefaultNetworkCallback(networkCallback)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        } else {
             connMgr?.registerNetworkCallback(NetworkRequest.Builder().build(), networkCallback)
         }
         value = NetStatus.Disconnected
@@ -45,33 +41,25 @@ object UtilsNet : LiveData<NetStatus>() {
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> NetStatus.Linked.transport = transportCellular
                 else -> NetStatus.Linked.transport = transportOther
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val v = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-                if (NetStatus.Linked.validated != v) {
-                    NetStatus.Linked.validated = v
-                    postValue(NetStatus.Linked)
-                }
-            } else if (NetStatus.Linked.validated != isConnected()) {
-                NetStatus.Linked.validated = !NetStatus.Linked.validated
+            val v = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            if (NetStatus.Linked.validated != v) {
+                NetStatus.Linked.validated = v
                 postValue(NetStatus.Linked)
             }
         }
     }
 
     fun isConnected() : Boolean {
-        val cm = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        val activeNetwork = cm?.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting == true
+        return value?.validated ?: false
     }
-
     /** 检查当前WIFI是否打开 */
-    fun wifiEnabled(): Boolean {
-        val wifiManager = mContext.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager?
+    fun wifiEnabled(context: Context): Boolean {
+        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager?
         return wifiManager?.isWifiEnabled == true
     }
     /** 当前网络是否有效 */
     fun isNetworkAvailable(): Boolean {
-        return value == NetStatus.Linked && value?.isEffective() == true
+        return value == NetStatus.Linked && value?.validated == true
     }
 }
 
@@ -80,10 +68,10 @@ enum class NetStatus {
 
     internal var validated = false
     internal var transport = transportOther
-    internal fun initStatus(): NetStatus {
+
+    internal fun initStatus() {
         validated = false
         transport = transportOther
-        return this
     }
 
     fun isEffective() : Boolean {

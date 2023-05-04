@@ -104,14 +104,18 @@ object UtilsApp {
     }
 
     /** 获取 DeviceId */
-    fun getDeviceId(): String? {
-        return if (!UtilsId.OAID.isNullOrEmpty()) {
-            UtilsId.OAID
-        } else if (!UtilsId.WebId.isNullOrEmpty() && UtilsId.WebId != "null") {
-            UtilsId.WebId
-        } else {
-            UtilsId.StandbyId
+    fun getDeviceId(): String {
+//    var OAID: String? = UtilsKV.getString("Key_OAID")
+//    var WebId: String? = UtilsKV.getString("Key_WebId")
+//    var StandbyId: String? = UtilsKV.getString("Key_StandbyId")
+        var id = UtilsKV.getString("getDeviceIdKey")
+        if (id.isNullOrEmpty()) {
+            val merge = "${System.currentTimeMillis()}${getBrand()}${getManufacturer()}${getUUID()}"
+            id = UtilsEncrypt.md5(merge)
+            UtilsKV.put("getDeviceIdKey", id)
         }
+        UtilsLog.log("getDeviceId: $id")
+        return id
     }
 
     /** 退出应用 */

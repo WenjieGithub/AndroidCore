@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 /** 网络服务 */
 object NetService {
-    var networkUnavailableForceCache = true                                     // 网络不可用, 强制使用缓存
+    var networkUnavailableForceCache = false                                    // 网络不可用, 强制使用缓存
     var logCallback : ((msg : String) -> Unit)? = null                          // 日志回调
     val publicHeaders = hashMapOf<String, String>()                             // 公共头文件
     val publicParams = hashMapOf<String, String>()                              // 公共参数文件
@@ -20,11 +20,17 @@ object NetService {
     /**
      * 上下文对象
      * 是否是 Debug 模式，默认 false
-     * 缓存大小，单位 M，默认 200
-     * 是否在网络不可用时，强制使用缓存，默认 true
+     * 缓存大小，单位 M，默认 100
+     * 是否在网络不可用时，强制使用缓存，默认 false
      * 日志回调类，默认为空
      */
-    fun init(context: Context, debug: Boolean = false, cacheSize: Int = 200, networkUnavailableForceCache: Boolean = true, logCallback : ((msg : String) -> Unit)? = null) {
+    fun init(
+        context: Context,
+        debug: Boolean = false,
+        cacheSize: Int = 100,
+        networkUnavailableForceCache: Boolean = false,
+        logCallback : ((msg : String) -> Unit)? = null
+    ) {
         NetService.networkUnavailableForceCache = networkUnavailableForceCache
         NetService.logCallback = logCallback
 
@@ -33,7 +39,7 @@ object NetService {
         } else {
             context.cacheDir
         })?.let {
-            mCache = Cache(File(it, "net"), (1024 * 1024 * cacheSize).toLong()) // 缓存文件目录，最大200 Mb 缓存大小
+            mCache = Cache(File(it, "net"), (1024 * 1024 * cacheSize).toLong()) // 缓存文件目录，最大100 Mb 缓存大小
         }
         initOkHttpClient(debug)
         UtilsNet.initNet(context)
@@ -44,7 +50,7 @@ object NetService {
                 .callTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)                           // 设置超时时间，默认超时 15秒
+                .connectTimeout(60, TimeUnit.SECONDS)                   // 设置超时时间，默认超时 60秒
                 .cache(mCache)
         if (debug) {                                                            // 如果 debug，可以使用不安全证书
             builder.connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))

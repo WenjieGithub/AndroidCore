@@ -18,5 +18,5 @@ dependencies {
 
     compileOnly "androidx.viewpager2:viewpager2:1.0.0"
     compileOnly "androidx.recyclerview:recyclerview:1.2.1"
-    compileOnly "com.google.android.material:material:1.7.0"
+    compileOnly "com.google.android.material:material:1.8.0"
 }

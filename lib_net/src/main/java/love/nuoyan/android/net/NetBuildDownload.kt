@@ -13,9 +13,6 @@ import kotlin.coroutines.resumeWithException
 
 /**
  * 描述: 下载网络请求构建，返回结果：code，msg；code = 0 代表结束下载任务，-1 代表异常，1 代表正在下载，2 代表下载完成，3 代表暂停状态，4 代表恢复下载状态
- * 作者: WJ
- * 时间: 2020/4/1
- * 版本: 1.0
  */
 class NetBuildDownload(url: String, tag: String) : NetBuild<Unit>(url, tag) {
     private val mUrlBuilder = url.toHttpUrl().newBuilder()
@@ -35,49 +32,51 @@ class NetBuildDownload(url: String, tag: String) : NetBuild<Unit>(url, tag) {
 
     override suspend fun build() = withContext(Dispatchers.Default) {
         mRequestBuilder.url(mUrlBuilder.build()).tag(tag).get()
-        if (mFile == null || mFile!!.isDirectory) {
-            mListener?.let { it(-1, "参数错误，保存文件为空或它是一个目录", 0, 0, mFile) }
-        } else {
-            if (!UtilsNet.isConnected() && NetService.networkUnavailableForceCache) {   // 网络不可用开启缓存
-                mRequestBuilder.cacheControl(CacheControl.FORCE_CACHE)                  // 设置使用缓存
+        try {
+            if (mFile == null || mFile!!.isDirectory) {
+                mListener?.let { it(-1, "参数错误，保存文件为空或它是一个目录", 0, 0, mFile) }
             } else {
-                mCacheControl?.let { mRequestBuilder.cacheControl(it) }                 // 使用缓存控制
+                if (!UtilsNet.isConnected() && NetService.networkUnavailableForceCache) {   // 网络不可用开启缓存
+                    mRequestBuilder.cacheControl(CacheControl.FORCE_CACHE)                  // 设置使用缓存
+                } else {
+                    mCacheControl?.let { mRequestBuilder.cacheControl(it) }                 // 使用缓存控制
+                }
+                if (mFile!!.exists() && mFile!!.length() >= 0) {
+                    setHeader("Range", "bytes=${mFile!!.length()}-")
+                }
+                val call = NetService.okClient.newCall(mRequestBuilder.build())
+                mCallback?.invoke(call)
+                mNetBuildCallback?.let { it(this@NetBuildDownload) }
+                call.awaitDownload()
+                mListener?.let { it(0, "下载任务结束", 0, 0, mFile) }
             }
-            if (mFile!!.exists() && mFile!!.length() >= 0) {
-                setHeader("Range", "bytes=${mFile!!.length()}-")
-            }
-            call = NetService.okClient.newCall(mRequestBuilder.build())
-            mCallback?.let { it(call!!) }
-            mNetBuildCallback?.let { it(this@NetBuildDownload) }
-            call!!.awaitDownload()
-            mListener?.let { it(0, "下载任务结束", 0, 0, mFile) }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        Unit
     }
 
     fun pause() {
         mPause = true
         mListener?.let { it(3, "下载暂停", 0, 0, mFile) }
     }
-    suspend fun resume() {
+    suspend fun resume(): Result<Unit> {
         mPause = false
         mListener?.let { it(4, "下载恢复", 0, 0, mFile) }
-        build()
+        return build()
     }
 
-    private suspend fun Call.awaitDownload() = suspendCancellableCoroutine<Unit> {
+    private suspend fun Call.awaitDownload() = suspendCancellableCoroutine {
         val start = System.currentTimeMillis()
         enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                NetService.logCallback?.let { log -> log("Net ## $e") }
+                NetService.logCallback?.invoke("Net ## $e")
                 if (it.isCancelled) return
                 it.resumeWithException(e)
             }
 
             override fun onResponse(call: Call, response: Response) {
-                parseResponse(true, isParseResponseBody = false, response = response, duration = System.currentTimeMillis() - start).let { msg ->
-                    NetService.logCallback?.let { log -> log("Net ## $msg") }
-                }
+                parseResponse(true, isParseResponseBody = false, response = response, duration = System.currentTimeMillis() - start)
                 if (it.isCancelled) return
                 it.resumeWith(runCatching {
                     if (response.isSuccessful) {

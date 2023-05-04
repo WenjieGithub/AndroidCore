@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 object UtilsJson {
+    private val strType = object : TypeReference<String>() {}.type
     var moshi: Moshi = Moshi.Builder().add(JsonAdapterUnit()).build()
 
     fun newParameterizedType(raw: Type, vararg args: Type): ParameterizedType {
@@ -20,6 +21,9 @@ object UtilsJson {
     }
 
     fun <T> formJson(type: Type, json: String): T? {
+        if (type == strType) {
+            return json as T
+        }
         return moshi.adapter<T>(type).fromJson(json)
     }
 

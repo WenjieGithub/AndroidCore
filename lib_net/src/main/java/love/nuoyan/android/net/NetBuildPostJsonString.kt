@@ -17,7 +17,7 @@ class NetBuildPostJsonString<T>(url: String, tag: String) : NetBuild<T>(url, tag
         this.json = json
     }
 
-    override suspend fun build(): T {
+    override suspend fun build(): Result<T> {
         mRequestBuilder.url(url).tag(tag).post(json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
         return super.build()
     }

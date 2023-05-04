@@ -9,9 +9,6 @@ import java.io.File
 
 /**
  * 描述: 网络请求构建
- * 作者: WJ
- * 时间: 2020/4/1
- * 版本: 1.0
  */
 class NetBuildUpload<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
     private val mRequestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -37,7 +34,7 @@ class NetBuildUpload<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
         mListener = listener
     }
 
-    override suspend fun build(): T {
+    override suspend fun build(): Result<T> {
         setParseLog(false, isParseResponseBody = true)
         if (mListener == null) {
             mRequestBuilder.url(url).tag(tag).post(mRequestBody.build())

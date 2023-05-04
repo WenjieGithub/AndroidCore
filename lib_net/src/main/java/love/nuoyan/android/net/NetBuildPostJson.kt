@@ -6,9 +6,6 @@ import org.json.JSONObject
 
 /**
  * 描述: 网络请求构建
- * 作者: WJ
- * 时间: 2020/4/1
- * 版本: 1.0
  */
 class NetBuildPostJson<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
     private val jsonObject = JSONObject()
@@ -33,7 +30,7 @@ class NetBuildPostJson<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
         jsonObject.put(key, value)
     }
 
-    override suspend fun build(): T {
+    override suspend fun build(): Result<T> {
         mRequestBuilder.url(url).tag(tag).post(jsonObject.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
         return super.build()
     }

@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:focusable="true"
-        android:paddingTop="10dp">
+        android:paddingTop="80dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/net_button"
