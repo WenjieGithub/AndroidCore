@@ -26,7 +26,17 @@ class NetBuildDownload(url: String, tag: String) : NetBuild<Unit>(url, tag) {
     /** 保存文件的位置 */
     fun setSaveFile(file: File) = apply { mFile = file }
     /** 添加参数 */
-    fun params(key: String, value: String) = apply { mUrlBuilder.addQueryParameter(key, value) }
+    fun params(key: String, value: String?) = apply {
+        if (value != null) {
+            mUrlBuilder.addQueryParameter(key, value)
+        }
+    }
+    /** 添加参数 */
+    fun paramsMap(params: Map<String, String>) = apply {
+        for (e in params) {
+            params(e.key, e.value)
+        }
+    }
     /** 获取 NetBuildDownload，可用于下载暂停等 */
     fun onNetBuildDownload(callback: (netBuild: NetBuildDownload) -> Unit) = apply { mNetBuildCallback = callback }
 

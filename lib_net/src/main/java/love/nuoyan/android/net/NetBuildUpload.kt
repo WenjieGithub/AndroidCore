@@ -15,8 +15,17 @@ class NetBuildUpload<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
     private var mListener: ((total: Long, update: Long, progress: Float)-> Unit)? = null
 
     /** 添加参数 */
-    fun params(key: String, value: String) = apply {
-        mRequestBody.addFormDataPart(key, value)
+    fun params(key: String, value: String?) = apply {
+        if (value != null) {
+            mRequestBody.addFormDataPart(key, value)
+        }
+    }
+
+    /** 添加参数 */
+    fun paramsMap(params: Map<String, String>) = apply {
+        for (e in params) {
+            params(e.key, e.value)
+        }
     }
 
     /**

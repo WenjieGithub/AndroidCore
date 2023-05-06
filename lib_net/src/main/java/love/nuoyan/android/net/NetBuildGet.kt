@@ -9,8 +9,17 @@ class NetBuildGet<T>(url: String, tag: String) : NetBuild<T>(url, tag) {
     private val mUrlBuilder = url.toHttpUrl().newBuilder()
 
     /** 添加参数 */
-    fun params(key: String, value: String) = apply {
-        mUrlBuilder.addQueryParameter(key, value)
+    fun params(key: String, value: String?) = apply {
+        if (value != null) {
+            mUrlBuilder.addQueryParameter(key, value)
+        }
+    }
+
+    /** 添加参数 */
+    fun paramsMap(params: Map<String, String>) = apply {
+        for (e in params) {
+            params(e.key, e.value)
+        }
     }
 
     override suspend fun build(): Result<T> {
