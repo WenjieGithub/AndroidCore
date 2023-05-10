@@ -2,6 +2,7 @@ package love.nuoyan.android.utils
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * 基础工具类
@@ -25,25 +26,27 @@ object Utils {
      * @param defaultChannel    默认的渠道地址
      */
     fun init(context: Context, applicationScope: CoroutineScope, debug: Boolean, key: String, defaultChannel: String) {
-        appContext = context.applicationContext
-        appScope = applicationScope
         isDebug = debug
+        appScope = applicationScope
+        appContext = context.applicationContext
         // 初始化顺序不能变
-        UtilsLog.init(appContext)
-        UtilsKV.init(appContext, key)
-        UtilsChannel.init(defaultChannel)
-        UtilsLog.log(
-            StringBuilder()
-                .append(separatorLine)
-                .append("MODEL: ${UtilsApp.getSysModel()}$separatorLine")
-                .append("Brand: ${UtilsApp.getBrand()}$separatorLine")
-                .append("Manufacturer: ${UtilsApp.getManufacturer()}$separatorLine")
-                .append("Android SDK: ${UtilsApp.getSdkVersion()}$separatorLine")
-                .append("Android Version: ${UtilsApp.getSysVersion()}$separatorLine")
-                .append("AppDebug: $isDebug$separatorLine")
-                .append("AppVersion: ${UtilsApp.getVersionName()}$separatorLine")
-                .append("AppChannel: ${UtilsChannel.getChannel()}")
-                .toString()
-        )
+        appScope.launch {
+            UtilsLog.init(appContext)
+            UtilsKV.init(appContext, key)
+            UtilsChannel.init(defaultChannel)
+            UtilsLog.log(
+                StringBuilder()
+                    .append(separatorLine)
+                    .append("MODEL: ${UtilsApp.getSysModel()}$separatorLine")
+                    .append("Brand: ${UtilsApp.getBrand()}$separatorLine")
+                    .append("Manufacturer: ${UtilsApp.getManufacturer()}$separatorLine")
+                    .append("Android SDK: ${UtilsApp.getSdkVersion()}$separatorLine")
+                    .append("Android Version: ${UtilsApp.getSysVersion()}$separatorLine")
+                    .append("AppDebug: $isDebug$separatorLine")
+                    .append("AppVersion: ${UtilsApp.getVersionName()}$separatorLine")
+                    .append("AppChannel: ${UtilsChannel.getChannel()}")
+                    .toString()
+            )
+        }
     }
 }

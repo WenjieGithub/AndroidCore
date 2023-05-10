@@ -56,9 +56,7 @@ class NetFragment : Fragment() {
                 map["id"] = "commandId"
                 map["clickNum"] = 1
                 UtilsJson.toJson(map.toMap())?.let { paramsJson(it) }
-            }.build(onError = {
-                it.toString()
-            })
+            }.build()
 
 
 
@@ -66,7 +64,7 @@ class NetFragment : Fragment() {
 //                .call(onError = {
 //                    it.toString()
 //                })
-            mBinding.text.text = r
+            mBinding.text.text = r.getOrNull()
         }
     }
 }

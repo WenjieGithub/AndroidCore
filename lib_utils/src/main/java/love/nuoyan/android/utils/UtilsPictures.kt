@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
@@ -66,7 +67,11 @@ abstract class UtilsPictures {
     }
 
     fun openPictures() {
-        resultPicturesPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            resultPicturesPermission.launch(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            resultPicturesPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
     }
     fun registerPictures(activity: AppCompatActivity) {
         resultPicturesLauncher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

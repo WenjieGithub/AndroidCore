@@ -5,12 +5,11 @@ import android.net.*
 import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.lifecycle.LiveData
-import love.nuoyan.android.net.UtilsNet.transportOther
 
 object UtilsNet : LiveData<NetStatus>() {
     const val transportWifi = "Wifi"
-    const val transportCellular = "Cellular"
     const val transportOther = "Other"
+    const val transportCellular = "Cellular"
 
     internal fun initNet(context: Context) {
         val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
@@ -19,7 +18,7 @@ object UtilsNet : LiveData<NetStatus>() {
         } else {
             connMgr?.registerNetworkCallback(NetworkRequest.Builder().build(), networkCallback)
         }
-        value = NetStatus.Disconnected
+        value = NetStatus.Linked.apply { validated = true }
     }
 
     private var networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -67,11 +66,11 @@ enum class NetStatus {
     Linked, Disconnected;
 
     internal var validated = false
-    internal var transport = transportOther
+    internal var transport = UtilsNet.transportOther
 
     internal fun initStatus() {
         validated = false
-        transport = transportOther
+        transport = UtilsNet.transportOther
     }
 
     fun isEffective() : Boolean {

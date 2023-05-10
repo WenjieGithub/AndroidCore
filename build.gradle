@@ -18,9 +18,9 @@ ext {
     // repository
     groupId = 'love.nuoyan.android'
     fkV = "0.0.1"
-    netV = "0.0.8"
+    netV = "0.1.0"
     perV = "0.0.1"
     qrV = "0.0.2"
-    utilsV = "0.0.4"
+    utilsV = "0.0.7"
     widgetsV = "0.0.1"
 }

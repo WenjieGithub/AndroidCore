@@ -80,7 +80,6 @@ class NetBuildDownload(url: String, tag: String) : NetBuild<Unit>(url, tag) {
         val start = System.currentTimeMillis()
         enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                NetService.logCallback?.invoke("Net ## $e")
                 if (it.isCancelled) return
                 it.resumeWithException(e)
             }

@@ -195,7 +195,7 @@ object UtilsEncrypt {
     /**
      * 压缩
      */
-    fun zipString(unzipString: String): String {
+    fun zipString(str: String): String {
         /*
          * 0 ~ 9 压缩等级 低到高
          * public static final int BEST_COMPRESSION = 9;            最佳压缩的压缩级别。
@@ -210,13 +210,13 @@ object UtilsEncrypt {
          * public static final int NO_FLUSH = 0;                    用于实现最佳压缩结果的压缩刷新模式。
          * public static final int SYNC_FLUSH = 2;                  用于清除所有未决输出的压缩刷新模式; 可能会降低某些压缩算法的压缩率。
          */
-        if (unzipString.isEmpty()) {
-            return unzipString
+        if (str.isEmpty()) {
+            return str
         }
         val deflate = Deflater(Deflater.BEST_COMPRESSION)          // 使用指定的压缩级别创建一个新的压缩器。
         val out = ByteArrayOutputStream(256)
         return try {
-            deflate.setInput(unzipString.toByteArray(Charsets.UTF_8))  // 设置压缩输入数据。
+            deflate.setInput(str.toByteArray(Charsets.UTF_8))  // 设置压缩输入数据。
             deflate.finish()                                           // 当被调用时，表示压缩应该以输入缓冲区的当前内容结束。
             val bytes = ByteArray(256)
             while (!deflate.finished()) {                              // 压缩输入数据并用压缩数据填充指定的缓冲区。
@@ -226,7 +226,7 @@ object UtilsEncrypt {
             Base64.encodeToString(out.toByteArray(), Base64.DEFAULT)
         } catch (e: Exception) {
             e.printStackTrace()
-            unzipString
+            str
         } finally {
             deflate.end()
             out.close()
@@ -236,14 +236,14 @@ object UtilsEncrypt {
     /**
      * 解压缩
      */
-    fun unzipString(zipString: String): String {
-        if (zipString.isEmpty()) {
-            return zipString
+    fun unzipString(str: String): String {
+        if (str.isEmpty()) {
+            return str
         }
         val inflater = Inflater()
         val out = ByteArrayOutputStream(256)
         return try {
-            inflater.setInput(Base64.decode(zipString, Base64.DEFAULT))
+            inflater.setInput(Base64.decode(str, Base64.DEFAULT))
             val bytes = ByteArray(256)
             while (!inflater.finished()) {
                 val length: Int = inflater.inflate(bytes)
@@ -252,7 +252,7 @@ object UtilsEncrypt {
             out.toString(Charsets.UTF_8.toString())
         } catch (e: Exception) {
             e.printStackTrace()
-            zipString
+            str
         } finally {
             inflater.end()
             out.close()
