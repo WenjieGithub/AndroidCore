@@ -80,7 +80,6 @@ object UtilsLog {
         }
     }
 
-    @Synchronized
     fun log(msg: String, tag: String = "Msg") {
         if (msg.isNotEmpty()) {
             val info = LogInfo(tag, msg)
@@ -127,7 +126,7 @@ object UtilsLog {
     }
 
     class WriteRunnable(private val list: List<LogInfo>) : Runnable {
-        private val sep = "l-o-g${Utils.separatorLine}".toByteArray()
+        private val sep = "l-o-g-".toByteArray()
         override fun run() {
             val fos = FileOutputStream(logFile, true)
             try {
