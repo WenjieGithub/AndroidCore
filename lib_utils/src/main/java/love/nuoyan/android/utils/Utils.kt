@@ -30,23 +30,21 @@ object Utils {
         appScope = applicationScope
         appContext = context.applicationContext
         // 初始化顺序不能变
-        appScope.launch {
-            UtilsLog.init(appContext)
-            UtilsKV.init(appContext, key)
-            UtilsChannel.init(defaultChannel)
-            UtilsLog.log(
-                StringBuilder()
-                    .append(separatorLine)
-                    .append("MODEL: ${UtilsApp.getSysModel()}$separatorLine")
-                    .append("Brand: ${UtilsApp.getBrand()}$separatorLine")
-                    .append("Manufacturer: ${UtilsApp.getManufacturer()}$separatorLine")
-                    .append("Android SDK: ${UtilsApp.getSdkVersion()}$separatorLine")
-                    .append("Android Version: ${UtilsApp.getSysVersion()}$separatorLine")
-                    .append("AppDebug: $isDebug$separatorLine")
-                    .append("AppVersion: ${UtilsApp.getVersionName()}$separatorLine")
-                    .append("AppChannel: ${UtilsChannel.getChannel()}")
-                    .toString()
-            )
-        }
+        UtilsLog.init(appContext)
+        UtilsKV.init(appContext, key)
+        UtilsChannel.init(defaultChannel)
+        UtilsLog.log(
+            StringBuilder()
+                .append(separatorLine)
+                .append("MODEL: ${UtilsApp.getSysModel()}$separatorLine")
+                .append("Brand: ${UtilsApp.getBrand()}$separatorLine")
+                .append("Manufacturer: ${UtilsApp.getManufacturer()}$separatorLine")
+                .append("Android SDK: ${UtilsApp.getSdkVersion()}$separatorLine")
+                .append("Android Version: ${UtilsApp.getSysVersion()}$separatorLine")
+                .append("AppDebug: $isDebug$separatorLine")
+                .append("AppVersion: ${UtilsApp.getVersionName()}$separatorLine")
+                .append("AppChannel: ${UtilsChannel.getChannel()}")
+                .toString()
+        )
     }
 }

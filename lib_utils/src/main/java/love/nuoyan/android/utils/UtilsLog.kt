@@ -30,7 +30,7 @@ object UtilsLog {
     private lateinit var logFile: File
     private lateinit var writerHandler: Handler
 
-    internal suspend fun init(context: Context, saveDay: Int = 2) = withContext(IO) {
+    internal fun init(context: Context, saveDay: Int = 2) {
         try {
             (if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
                 context.externalCacheDir
@@ -52,16 +52,18 @@ object UtilsLog {
                 isInit = true
                 UtilsCrash().initCrash()
 
-                dirFile.listFiles()?.let { files ->
-                    val pastDate = UtilsTime.getPastDate(saveDay).replace(".", "")
-                    for (file in files) {
-                        try {
-                            val date = file.name.substring(4, 12)
-                            if (pastDate.toInt() - date.toInt() > 0) {
-                                file.delete()
+                Utils.appScope.launch(IO) {
+                    dirFile.listFiles()?.let { files ->
+                        val pastDate = UtilsTime.getPastDate(saveDay).replace(".", "")
+                        for (file in files) {
+                            try {
+                                val date = file.name.substring(4, 12)
+                                if (pastDate.toInt() - date.toInt() > 0) {
+                                    file.delete()
+                                }
+                            } catch (e: Exception) {
+                                logE("UtilsLog ## $e")
                             }
-                        } catch (e: Exception) {
-                            logE("UtilsLog ## $e")
                         }
                     }
                 }
