@@ -112,10 +112,10 @@ object UtilsLog {
         log(msg, "Debug")
     }
 
-    @Synchronized
     fun finish() {
-        writerHandler.post(WriteRunnable(logList))
+        val list = logList
         logList = mutableListOf()
+        writerHandler.post(WriteRunnable(list))
     }
 
     internal fun crash(msg: String) {
