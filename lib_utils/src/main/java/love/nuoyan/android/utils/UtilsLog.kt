@@ -130,17 +130,19 @@ object UtilsLog {
     class WriteRunnable(private val list: List<LogInfo>) : Runnable {
         private val sep = "l-o-g-".toByteArray()
         override fun run() {
-            val fos = FileOutputStream(logFile, true)
             try {
+                if (!logFile.exists()) {
+                    logFile.createNewFile()
+                }
+                val fos = FileOutputStream(logFile, true)
                 for (info in list) {
                     fos.write(zipBytes(info.toBytes()))
                     fos.write(sep)
                     fos.flush()
                 }
+                fos.close()
             } catch (e: Exception) {
                 logE( "写 Log 文件出错: ${e.stackTraceToString()}")
-            } finally {
-                fos.close()
             }
         }
 

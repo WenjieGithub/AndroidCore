@@ -21,6 +21,6 @@ ext {
     netV = "0.1.0"
     perV = "0.0.1"
     qrV = "0.0.2"
-    utilsV = "0.1.0"
+    utilsV = "0.1.1"
     widgetsV = "0.0.1"
 }
