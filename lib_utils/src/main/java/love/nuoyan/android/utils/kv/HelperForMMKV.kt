@@ -2,29 +2,34 @@ package love.nuoyan.android.utils.kv
 
 import android.content.Context
 import android.os.Environment
-import love.nuoyan.android.utils.UtilsCache
-import love.nuoyan.android.utils.UtilsKV
-import love.nuoyan.android.utils.UtilsLog
 import com.tencent.mmkv.MMKV
 import com.tencent.mmkv.MMKVHandler
 import com.tencent.mmkv.MMKVLogLevel
 import com.tencent.mmkv.MMKVRecoverStrategic
+import love.nuoyan.android.utils.UtilsCache
+import love.nuoyan.android.utils.UtilsKV
+import love.nuoyan.android.utils.UtilsLog
 import java.io.File
 
 internal class HelperForMMKV : MMKVHandler {
     fun initMMKV(context: Context, key: String? = null) {
         try {
-            (if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
-                context.getExternalFilesDir(null)
-            } else {
-                context.filesDir
-            })?.let { file ->
-                MMKV.initialize(context, "${file.absolutePath}${File.separator}kvStore")
-                MMKV.registerHandler(this)
-                MMKV.registerContentChangeNotify { UtilsLog.log("UtilsKV ## ContentChangeNotify: $it") }
+            val fd = File(context.filesDir, "kvStore")
+            if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+                context.getExternalFilesDir(null)?.let {
+                    val file = File(it, "kvStore")
+                    if (file.exists() && file.isDirectory) {
+                        file.copyRecursively(fd, true)
+                        file.deleteRecursively()
+                    }
+                }
             }
+            MMKV.initialize(context, fd.absolutePath, null, MMKVLogLevel.LevelInfo, this)
+            MMKV.registerContentChangeNotify { UtilsLog.log("UtilsKV ## ContentChangeNotify: $it") }
             UtilsKV.mKV = MMKV.mmkvWithID("KVStore", MMKV.MULTI_PROCESS_MODE, key)
             UtilsCache.mKV = MMKV.mmkvWithID("KVCache", MMKV.MULTI_PROCESS_MODE, key)
+            UtilsKV.mKV!!.enableAutoKeyExpire(MMKV.ExpireNever)
+            UtilsCache.mKV!!.enableAutoKeyExpire(MMKV.ExpireNever)
         } catch (e: Exception) {
             UtilsLog.log("UtilsKV ## 初始化异常: ${e.stackTraceToString()}")
         }

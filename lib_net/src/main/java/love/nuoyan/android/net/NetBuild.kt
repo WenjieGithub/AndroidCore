@@ -53,6 +53,7 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
             mCallback?.invoke(call)
             Result.success(call.await())
         } catch (e: Exception) {
+            NetService.logCallback?.invoke("isSuccess: false $url $separatorLine${e.stackTraceToString()}")
             Result.failure(e)
         }
     }
@@ -69,7 +70,7 @@ abstract class NetBuild<T> internal constructor(protected val url: String, prote
                 try {
                     parseResponse(isParseLogRequestBody, isParseLogResponseBody, response, System.currentTimeMillis() - start)
                 } catch (e: Exception) {
-                    NetService.logCallback?.invoke("ParseError:$separatorLine${e.stackTraceToString()}")
+                    NetService.logCallback?.invoke("isSuccess: false $separatorLine ParseError:$separatorLine${e.stackTraceToString()}")
                 }
                 it.resumeWith(runCatching {
                     if (response.isSuccessful) {
